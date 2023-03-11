@@ -29,8 +29,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
 });
 Route::controller(EditProfileController::class)->group(function(){
-      Route::get('showprofile','showprofile');
-      Route::put('update','update');
+      Route::get('showprofile','showprofile')->middleware(['permission:view profile']);
+      Route::put('update','update')->middleware(['permission:edit profile']);
 });
 
 Route::post('forgot-password', [RestPasswordController::class, 'forgetPassword'])->name('password.request');
