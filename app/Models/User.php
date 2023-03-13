@@ -24,7 +24,9 @@ class User extends Authenticatable Implements JWTSubject
         'email',
         'password',
     ];
-
+    //  public function products(){
+    //     return $this->hasMany(Product::class); 
+    //  }
     /**
      * The attributes that should be hidden for serialization.
      *
