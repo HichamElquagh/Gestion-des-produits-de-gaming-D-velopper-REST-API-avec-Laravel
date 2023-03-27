@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\role;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
+use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
@@ -34,9 +36,27 @@ class RoleController extends Controller
      * @param  \App\Http\Requests\StoreRoleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRoleRequest $request)
+    public function storeRole(StoreRoleRequest $request)
     {
         //
+       
+        $storerole = Role::create(['name' => $request->name]);
+        $storerole->syncPermissions($request->permission);
+         if($storerole){
+            return response()->json([
+                'status'=>true,
+                'role'=>'creted seccessfully',
+                'role'=>new RoleResource($storerole)
+              ]);
+         }
+         else {
+            return response()->json([
+            'status'=>false,
+            'role'=>'erreur en role'
+            ]);
+         }
+        
+
     }
 
     /**
@@ -45,10 +65,26 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function showRole(Role $role , $id)
     {
         //
-        
+
+        $showrole =$role->find($id);
+
+        if(!$showrole){
+            return response()->json([
+             'status'=>false,
+             'role'=>'not role found'
+            ]);
+        }
+
+        else{
+            return response()->json([
+            'status'=>true,
+            'role'=>new RoleResource($showrole)
+            ]);
+        }
+
     }
 
     /**
@@ -69,9 +105,28 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function updateRole(UpdateRoleRequest $request,$id)
     {
-        //
+        $role = Role::find($id);
+        $role->update(['name' => $request->name]);
+        $role->syncPermissions($request->permission);
+
+        if(!$role){
+            return response()->json([
+             'status'=>false,
+             'role'=>'erreur role'
+            ]);
+        }
+
+        else{
+            return response()->json([
+            'status'=>true,
+            'role'=>'role updated successfully',
+            'role'=>new RoleResource($role)
+                ]);
+        }
+
+ 
     }
 
     /**
@@ -80,8 +135,23 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function deleteRole($id)
     {
         //
+      $role = Role::find($id);
+        $role->delete();
+
+        if(!$role){
+            return response()->json([
+              'status'=>false,
+              'role'=>'erreur en delete'
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=>true,
+                'role'=>'role is deleted successfully'
+            ]);
+        }
     }
 }

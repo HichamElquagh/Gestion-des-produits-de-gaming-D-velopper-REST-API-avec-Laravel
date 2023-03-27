@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use  App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserResource;
 use  App\Models\User;
 
 class EditProfileController extends Controller
@@ -35,7 +36,7 @@ class EditProfileController extends Controller
 
       $request->validate([
         'name' => 'required',
-        'email' => 'required',
+        'email' => 'required|',
         'old_password' => 'required',
         'password'=>'required|confirmed',
       ]);
@@ -59,6 +60,7 @@ class EditProfileController extends Controller
 
     ]);
 }
+
     
 
 }

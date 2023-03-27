@@ -21,8 +21,7 @@ class CategorySeeder extends Seeder
             
         ]);
         Category::create([
-            'name'=>'mouce gaming',
-            
+            'name'=>'clavier gaming',
         ]);
     }
 }

@@ -19,8 +19,22 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
+            $showallcategory = Category::all();
+            if($showallcategory){
+                return response()->json([
+                    'status'=>true,
+                    'product'=>new CategoryResource($showallcategory)
+                ]);
+            }
+            else  {
+                    return response()->json([
+                        'status'=>false,
+                        'product'=>'erreur en category',
+                    ]);
+            }
+           
+        }
+    
 
     /**
      * Show the form for creating a new resource.

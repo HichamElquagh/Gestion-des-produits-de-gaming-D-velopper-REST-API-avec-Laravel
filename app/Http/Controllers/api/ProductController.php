@@ -16,9 +16,13 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+     public function index()
     {
-        //
+        return response()->json([
+            'status' => true,
+            'message' => 'Products retrieved successfully!',
+            'data' => ProductResource::collection(Product::all()),
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -108,11 +112,11 @@ class ProductController extends Controller
     {
         //
         $updateproduct = $product->find($id);
-
-         if(!$updateproduct){
+        $user = Auth::user();
+         if(!$user->can('edit all product') && $user->id != $product->user_id){
             return response()->json([
                 'status'=>false,
-                'product'=>'erreur'
+                'product'=>"You don't have permission to edit this product!"
             ]);
          }
          else {
@@ -137,11 +141,11 @@ class ProductController extends Controller
     {
         //
         $deleteproduct = $product->find($id);
-        
-        if(!$deleteproduct){
+        $user = Auth::user();
+        if(!$user->can('edit All product') && $user->id != $product->user_id){
             return response()->json([
                 'status'=>false,
-                'product'=>'erreur en delete'
+                'product'=>"You don't have permission to delete this product!"
             ]);
          }
          else {
